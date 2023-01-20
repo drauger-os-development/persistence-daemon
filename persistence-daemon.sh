@@ -22,17 +22,51 @@
 #  
 #
 # check for devices with label "persist"
-labels=$(ls /dev/disk/by-partlabel)
+names=$(ls /dev/disk/by-partlabel)
+labels=$(ls /dev/disk/by-label)
 device=""
 for each in $labels; do
 	if [ "${each,,}" == "persist" ] || [ "${each,,}" == "persistent" ]; then
-		device="/dev/disk/by-partlabel/$each"
+		device="/dev/disk/by-label/$each"
+		break
 	fi
 done
-if [ "$device" == "" ]; then
+device_2=""
+for each in $names; do
+	if [ "${each,,}" == "persist" ] || [ "${each,,}" == "persistent" ]; then
+		device_2="/dev/disk/by-partlabel/$each"
+		break
+	fi
+done
+if [ "$device" == "" ] && [ "$device_2" == "" ]; then
 	echo "No persistent partition found. Exiting..."
 	exit
 fi
+
+# derefrence symbolic links
+new_device="$(stat $device -c %N | awk '{print $3}' | sed 's:../..:/dev:g' | sed s/\'//g)"
+new_device="$new_device $(stat $device_2 -c %N | awk '{print $3}' | sed 's:../..:/dev:g' | sed s/\'//g)"
+
+# make sure there are no duplicate entries
+device=()
+for each in $new_device; do
+	add=0
+	for each1 in $device; do
+		if [ "$each" == "$each1" ]; then
+			add=1
+		fi
+	done
+	if [ "$add" == "0" ]; then
+		device+=("$each")
+	fi
+done
+if [ ${#device[@]} -gt 1 ]; then
+	echo "More than one persistent partition was found. Expecting one. Exiting..."
+	exit 2
+fi
+
+# convert single-entry list to string
+device="${device[0]}"
 
 # check if partition uses valid fs type
 type=$(lsblk "$device" --output fstype --noheadings)
