@@ -82,7 +82,7 @@ mount "$device" /mnt
 if [ ! -f /mnt/.persistent ]; then
 	# No. This HAS NOT been used before.
 	touch /mnt/.persistent
-	cp -R /home/* /mnt/
+	cp -a /home/* /mnt/
 fi
 
 # unmount from /mnt, mount on /home
