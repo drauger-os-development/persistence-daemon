@@ -1,0 +1,10 @@
+Package: persistence-daemon
+Version: 0.0.2-alpha2
+Maintainer: Thomas Castleman <contact@draugeros.org>
+Homepage: https://github.com/drauger-os-development/persistence-daemon
+Section: admin
+Architecture: all
+Priority: optional
+Depends: coreutils (>=8.28-1ubuntu1), util-linux (>=2.31.1-0.4ubuntu3.3), systemd (>=237-3ubuntu10.24), sed, gawk, bash (>=5.1)
+Description: Persistent pertition auto-mounter
+ Automatically mount persistent partitions such that user data is preserved between live USB reboots.

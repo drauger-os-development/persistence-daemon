@@ -1,0 +1,11 @@
+[Unit]
+Description=Mount live system persistence partition
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart=/usr/bin/persistence-daemon
+
+[Install]
+WantedBy=multi-user.target
