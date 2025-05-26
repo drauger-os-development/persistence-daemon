@@ -1,5 +1,5 @@
 Package: persistence-daemon
-Version: 0.0.3-alpha2
+Version: 0.0.4-alpha2
 Maintainer: Thomas Castleman <contact@draugeros.org>
 Homepage: https://github.com/drauger-os-development/persistence-daemon
 Section: admin
